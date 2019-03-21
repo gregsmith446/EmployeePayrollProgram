@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CSBookProject
 {
@@ -8,11 +9,70 @@ namespace CSBookProject
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            List<Staff> myStaff = new List<Staff>();
+
+            FileReader fr = new FileReader();
+
+            int month = 0, year = 0;
+
+            while (year == 0)
+            {
+                Console.WriteLine("Please Enter the Year: ");
+
+                try
+                {
+                    year = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + "Please Try Again. Enter a Valid Year: ");
+                }
+            }
+
+            while (month == 0)
+            {
+                Console.WriteLine("Please Enter the Month (as an integer): ");
+                try
+                {
+                    month = Convert.ToInt32(Console.ReadLine());
+                    if (month < 1 || month > 12)
+                    {
+                        Console.WriteLine("Month Must Be an Integer 1 - 12, inclusive: ");
+                        month = 0;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + "Please Try Again. Enter a Valid Month: ");
+                }
+
+                // add items to myStaff list, by reading items then assigning results to myStaff
+                myStaff = fr.ReadFile();
+
+                for (int i = 0; i < myStaff.Count; i++)
+                {
+                    try
+                    {
+                        Console.WriteLine("Enter Hours Worked for {0}: ", myStaff[i].NameOfStaff);
+                        myStaff[i].HoursWorked = Convert.ToInt32(Console.ReadLine());
+                        myStaff[i].CalculatePay();
+
+                        Console.WriteLine(myStaff[i].ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        i--;
+                    }
+                }
+                PaySlip ps = new PaySlip(month, year);
+                ps.GeneratePaySlip(myStaff);
+                ps.GenerateSummary(myStaff);
+            }
         }
     }
 
-    // basic staff info + calculates their pay
+    // 1 basic staff info + calculates their pay
     class Staff
     {
         // fields
@@ -68,12 +128,12 @@ namespace CSBookProject
         // why do I need 'override'?
         public override string ToString()
         {
-            return "\nStaff Name = " + NameOfStaff + "\nHourly Rate = " + hourlyRate 
+            return "\nStaff Name = " + NameOfStaff + "\nHourly Rate = " + hourlyRate
                 + "\nHours Worked = " + HoursWorked + "\nBasic Pay = " + BasicPay + "\nTotal Pay = " + TotalPay;
         }
     }
 
-    // inherit parent staff class + override pay calc method with manager name & hourlyRate
+    // 2 inherit parent staff class + override pay calc method with manager name & hourlyRate
     class Manager : Staff
     {
         // fields
@@ -101,16 +161,20 @@ namespace CSBookProject
             {
                 TotalPay = BasicPay + Allowance;
             }
+            else
+            {
+                TotalPay = TotalPay;
+            }
         }
 
         public override string ToString()
         {
             return "\nStaff Name = " + NameOfStaff + "\nHourly Rate = " + managerHourlyRate
-                + "\nHours Worked = " + HoursWorked + "\nBasic Pay = " + BasicPay + "\nTotal Pay = " + TotalPay;
+                + "\nHours Worked = " + HoursWorked + "\nBasic Pay = " + BasicPay + "\nAllowace = " + Allowance + "\nTotal Pay = " + TotalPay;
         }
     }
 
-    // inherit staff class + override pay calc method with admin's pay info
+    // 3 inherit staff class + override pay calc method with admin's pay info
     class Admin : Staff
     {
         // fields - they are variables with assigned levels of access?
@@ -140,12 +204,12 @@ namespace CSBookProject
         public override string ToString()
         {
             return "\nStaff Name = " + NameOfStaff + "\nHourly Rate = " + adminHourlyRate
-                + "\nHours Worked = " + HoursWorked + "\nBasic Pay = " + BasicPay + "\nOvertime" + Overtime + 
-                "\nTotal Pay = " + TotalPay;
+                + "\nHours Worked = " + HoursWorked + "\nBasic Pay = " + BasicPay + "\nOvertime = " + Overtime +
+                "\nTotal Pay = " + (TotalPay + Overtime);
         }
     }
 
-    // reads from a txt file + creates a list of staff objects based on contents of txt file
+    // 4 reads from a txt file + creates a list of staff objects based on contents of txt file
     class FileReader
     {
         // method called ReadFile() that takes no parameters & returns a list of staff objects
@@ -159,7 +223,7 @@ namespace CSBookProject
             List<Staff> myStaff = new List<Staff>();
             string[] result = new string[2];
             string path = "staff.txt";
-            string[] separator = {", "};
+            string[] separator = { ", " };
 
             if (File.Exists(path))
             {
@@ -172,14 +236,16 @@ namespace CSBookProject
                         if (result[1] == "Manager")
                         {
                             myStaff.Add(new Manager(result[0]));
-                        } else if (result[1] == "Admin")
+                        }
+                        else if (result[1] == "Admin")
                         {
-                            myStaff.Add(new Admin(result[1]));
+                            myStaff.Add(new Admin(result[0]));
                         }
                     }
                     sr.Close();
                 }
-            } else
+            }
+            else
             {
                 Console.WriteLine("Error: File Does Not Exist");
             }
@@ -188,7 +254,7 @@ namespace CSBookProject
         }
     }
 
-    // generates payslip of each employee + a report of staff who worked <10 hrs in a month
+    // 5 generates payslip of each employee + a report of staff who worked <10 hrs in a month
     class PaySlip
     {
         // fields
@@ -216,7 +282,7 @@ namespace CSBookProject
 
                 using (StreamWriter sw = new StreamWriter(path))
                 {
-                    sw.WriteLine("PAYSLIP FOR {0} {1}", (MonthsOfYear) month, year);
+                    sw.WriteLine("PAYSLIP FOR {0} {1}", (MonthsOfYear)month, year);
                     sw.WriteLine("====================");
                     sw.WriteLine("Name of Staff: {0}", f.NameOfStaff);
                     sw.WriteLine("Hours Worked: {0}", f.HoursWorked);
@@ -229,7 +295,7 @@ namespace CSBookProject
                     }
                     else if (f.GetType() == typeof(Admin))
                     {
-                        sw.WriteLine("Overtime: {0:C}", ((Admin)f).Overtime));
+                        sw.WriteLine("Overtime: {0:C}", ((Admin)f).Overtime);
                     }
 
                     sw.WriteLine("");
@@ -243,10 +309,43 @@ namespace CSBookProject
             }
         }
 
+        // 6 print a sumarry for employees who have worked < 10 hourswz
         public void GenerateSummary(List<Staff> myStaff)
         {
+            // use LINQ to select all employees (from our staff list) who worked 10 hours or less
+            // we want the names of those staff in ascending order as well as the amt of hours worked
+            // using streamwriter, print all that info into a txt file summary.txt 
+            var result =
+                 from f in myStaff
+                 where f.HoursWorked < 10
+                 orderby f.NameOfStaff ascending
+                 select new
+                 {
+                     f.NameOfStaff,
+                     f.HoursWorked
+                 };
 
+            string path = "summary.txt";
+
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine("Staff with less than 10 working hours");
+                sw.WriteLine("");
+
+                foreach (var f in result)
+                {
+                    sw.WriteLine("Name of Staff: {0}, Hours Worked: {1}", f.NameOfStaff, f.HoursWorked);
+
+                    sw.Close();
+                }
+            }
         }
 
+        public override string ToString()
+        {
+            return "month = " + month + "year = " + year;
+        }
     }
 }
+
+    

@@ -1,0 +1,11 @@
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\bin\Debug\netcoreapp2.1\CSBookProject.deps.json
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\bin\Debug\netcoreapp2.1\CSBookProject.runtimeconfig.json
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\bin\Debug\netcoreapp2.1\CSBookProject.runtimeconfig.dev.json
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\bin\Debug\netcoreapp2.1\CSBookProject.dll
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\bin\Debug\netcoreapp2.1\CSBookProject.pdb
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.csprojAssemblyReference.cache
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.csproj.CoreCompileInputs.cache
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.AssemblyInfoInputs.cache
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.AssemblyInfo.cs
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.dll
+C:\Users\gregs\Desktop\CD\CSBookProject\CSBookProject\obj\Debug\netcoreapp2.1\CSBookProject.pdb
